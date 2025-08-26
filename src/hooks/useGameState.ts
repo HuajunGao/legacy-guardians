@@ -7,6 +7,7 @@ import { badges as badgeData } from '../modules/badges';
 import { dilemmas as dilemmaQuestions } from '../modules/dilemmas';
 import { handleSpinWheel as spinWheel } from '../modules/spinWheel';
 import aiPersonalities from '../constants/ai-personalities.json';
+import aiFeedbackRules from '../constants/ai-feedback.json';
 import { assets as assetsData } from '../modules/assets';
 import { getAiResponse } from '../utils/ai';
 import { calculateDailyReturns } from '../utils/game-logic';
@@ -36,6 +37,7 @@ export const useGameState = () => {
   const [aiResponse, setAiResponse] = useState('');
   const [aiPersonality, setAiPersonality] = useState<string>(aiPersonalities[0].id);
   const [aiEnabled, setAiEnabled] = useState(true);
+  const [aiMessages, setAiMessages] = useState<string[]>([]);
 
   // Dilemma/Quiz state
   const [dilemma, setDilemma] = useState<string | null>(null);
@@ -253,11 +255,44 @@ export const useGameState = () => {
     if ((weights.yield || 0) >= 20 && !badges.includes('收益智者')) {
       newBadges.push('收益智者');
     }
+    const earnedBadges = newBadges.filter(b => !badges.includes(b));
     setBadges(newBadges);
 
     // Track history
     setHistory([...history, { day: day + 1, weights: { ...weights }, event: ev, returns: dayReturn }]);
-  }, [day, returns, badges, weights, history, askedDilemmas, portfolioValue, peakValue]);
+
+    // AI feedback rules
+    if (aiEnabled) {
+      const personality = aiPersonalities.find(p => p.id === aiPersonality) || aiPersonalities[0];
+      const queue: string[] = [];
+      aiFeedbackRules.forEach(rule => {
+        if (rule.type === 'returnsBelow' && dayReturn < rule.threshold) {
+          const msg = rule.template.replace('{returns}', dayReturn.toFixed(2));
+          queue.push(msg);
+        }
+        if (rule.type === 'weightAbove') {
+          const w = (weights as any)[rule.asset] || 0;
+          if (w > rule.threshold) {
+            const msg = rule.template
+              .replace('{asset}', rule.asset)
+              .replace('{percent}', String(w));
+            queue.push(msg);
+          }
+        }
+        if (rule.type === 'badgeEarned' && earnedBadges.length > 0) {
+          earnedBadges.forEach(b => {
+            const msg = rule.template.replace('{badge}', b);
+            queue.push(msg);
+          });
+        }
+      });
+      if (queue.length > 0) {
+        const styled = queue.map(m => `${personality.name}：${m}`);
+        setAiMessages(prev => [...prev, ...styled]);
+        setAiChatOpen(true);
+      }
+    }
+  }, [day, returns, badges, weights, history, askedDilemmas, portfolioValue, peakValue, aiEnabled, aiPersonality]);
 
   return {
     // State
@@ -274,6 +309,7 @@ export const useGameState = () => {
     aiChatOpen,
     aiInput,
     aiResponse,
+    aiMessages,
     dilemma,
     quiz,
     quizAnswered,
