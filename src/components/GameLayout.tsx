@@ -13,7 +13,7 @@ export const GameLayout: React.FC = () => {
   const {
     // State
     companyName, avatar, theme, coins, gems, stars, wheelOpen, wheelResult, wheelUsed,
-    aiChatOpen, aiInput, aiResponse, dilemma, quiz, quizAnswered, endgame,
+    aiChatOpen, aiInput, aiResponse, aiMessages, dilemma, quiz, quizAnswered, endgame,
     showSummary, history, weights, day, returns, volatility, drawdown, event, task, badges,
     showModal, modalContent, pendingCompanyName, avatarOptions,
     allowedAssets, pendingCoinRequest, aiPersonality, aiEnabled,
@@ -99,7 +99,7 @@ export const GameLayout: React.FC = () => {
         dilemma={dilemma} quiz={quiz} quizAnswered={quizAnswered} endgame={endgame} showSummary={showSummary}
         companyName={companyName} avatar={avatar} avatarOptions={avatarOptions} theme={theme}
         pendingCompanyName={pendingCompanyName} aiPartnerData={aiPartnerData} aiInput={aiInput}
-        aiResponse={aiResponse} returns={returns} badges={badges}
+        aiResponse={aiResponse} aiMessages={aiMessages} returns={returns} badges={badges}
         onModalClose={handlers.modalClose} onCompanyNameChange={setCompanyName} onAvatarChange={setAvatar}
         onThemeChange={setTheme} onPendingCompanyNameChange={setPendingCompanyName}
         onDilemmaClose={handlers.dilemmaClose} onQuizAnswer={handlers.quizAnswer}

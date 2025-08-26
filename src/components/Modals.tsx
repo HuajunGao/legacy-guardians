@@ -20,6 +20,7 @@ interface ModalsProps {
   aiPartnerData: AIPartner;
   aiInput: string;
   aiResponse: string;
+  aiMessages: string[];
   returns: number | null;
   badges: string[];
   onModalClose: () => void;
@@ -331,6 +332,7 @@ export const Modals: React.FC<ModalsProps> = ({
   aiPartnerData,
   aiInput,
   aiResponse,
+  aiMessages,
   returns,
   badges,
   onModalClose,
@@ -444,11 +446,14 @@ export const Modals: React.FC<ModalsProps> = ({
             <AiDescription>
               你可以向AI伙伴提问任何金融相关问题。
             </AiDescription>
-            <AiInput 
-              type="text" 
-              value={aiInput} 
-              onChange={e => onAiInputChange(e.target.value)} 
-              placeholder="请输入你的问题..." 
+            {aiMessages.map((msg, idx) => (
+              <AiResponse key={idx}>{msg}</AiResponse>
+            ))}
+            <AiInput
+              type="text"
+              value={aiInput}
+              onChange={e => onAiInputChange(e.target.value)}
+              placeholder="请输入你的问题..."
             />
             <ModalButton $variant="primary" onClick={onAiAsk}>
               发送

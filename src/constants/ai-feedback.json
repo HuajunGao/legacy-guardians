@@ -1,0 +1,20 @@
+[
+  {
+    "id": "negative_returns",
+    "type": "returnsBelow",
+    "threshold": 0,
+    "template": "今天的收益为{returns}%，别灰心，试着调整你的策略。"
+  },
+  {
+    "id": "crypto_overweight",
+    "type": "weightAbove",
+    "asset": "crypto",
+    "threshold": 50,
+    "template": "你在{asset}上的配置达到{percent}%，可能有些集中，记得分散风险。"
+  },
+  {
+    "id": "badge_earned",
+    "type": "badgeEarned",
+    "template": "恭喜获得{badge}徽章，继续保持！"
+  }
+]
