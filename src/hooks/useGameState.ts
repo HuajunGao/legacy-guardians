@@ -19,20 +19,20 @@ import {
   checkBadgeEligibility,
   checkGameEnd,
 } from '../utils/game-logic';
-import { GAME_CONFIG } from '../constants/game-config';
+import { GAME_CONFIG, ASSET_CATEGORIES } from '../constants/game-config';
 
 export const useGameState = () => {
   // Company/Avatar Customization
-  const [companyName, setCompanyName] = useState('我的空岛公司');
-  const [avatar, setAvatar] = useState('https://cdn-icons-png.flaticon.com/512/616/616494.png');
+  const [companyName, setCompanyName] = useState(GAME_CONFIG.DEFAULT_COMPANY_NAME);
+  const [avatar, setAvatar] = useState(GAME_CONFIG.AVATAR_OPTIONS[0]);
   const [theme, setTheme] = useState('cyberpunk');
 
   // Resource Management
-  const [coins, setCoins] = useState(100);
-  const [gems, setGems] = useState(5);
+  const [coins, setCoins] = useState(GAME_CONFIG.INITIAL_COINS);
+  const [gems, setGems] = useState(GAME_CONFIG.INITIAL_GEMS);
   const [stars, setStars] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [allowedAssets, setAllowedAssets] = useState<string[]>(['tech','bond','gold','crypto','esg','stablecoin','yield']);
+  const [allowedAssets, setAllowedAssets] = useState<string[]>(Object.values(ASSET_CATEGORIES));
   const [pendingCoinRequest, setPendingCoinRequest] = useState<number | null>(null);
 
   // Spin the Wheel state
@@ -88,14 +88,7 @@ export const useGameState = () => {
   const [quizResult, setQuizResult] = useState('');
 
   // Avatar options
-  const avatarOptions = [
-    'https://cdn-icons-png.flaticon.com/512/616/616494.png',
-    'https://cdn-icons-png.flaticon.com/512/616/616408.png',
-    'https://cdn-icons-png.flaticon.com/512/616/616430.png',
-    'https://cdn-icons-png.flaticon.com/512/616/616408.png',
-    'https://cdn-icons-png/flaticon.com/512/616/616408.png',
-    'https://cdn-icons-png.flaticon.com/512/616/616408.png'
-  ];
+  const avatarOptions = GAME_CONFIG.AVATAR_OPTIONS;
 
   // Parent controls
   const requestCoins = useCallback((amount: number) => {
@@ -181,8 +174,8 @@ export const useGameState = () => {
     setPeakValue(1);
     setQuizActive(false);
     setQuizResult('');
-    setCoins(100);
-    setGems(5);
+    setCoins(GAME_CONFIG.INITIAL_COINS);
+    setGems(GAME_CONFIG.INITIAL_GEMS);
     setStars(0);
     setProgress(0);
     setEndgame(false);
